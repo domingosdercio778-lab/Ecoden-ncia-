@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EcoDenúncia - Gestão Ambiental Distrital</title>
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #1b5e20;
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-sub: #7f8c8d;
+            --border-color: #dcdde1;
+            --accent-blue: #0288d1;
+            --accent-orange: #e65100;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 30px;
+        }
+
+        /* HEADER */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .brand h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .nav-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* CONTAINER */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            color: var(--primary-dark);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .card-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            margin-bottom: 16px;
+        }
+
+        /* FORMULÁRIO */
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background-color: #fafafa;
+            outline: none;
+        }
+
+        textarea {
+            resize: none;
+            height: 80px;
+        }
+
+        /* FOTO COM CÂMARA */
+        .photo-area {
+            border: 2px dashed var(--border-color);
+            background-color: #fafafa;
+            border-radius: 8px;
+            padding: 18px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .photo-icon {
+            font-size: 1.8rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .photo-text {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+        }
+
+        .photo-preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .gps-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* BOTÕES */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn-blue {
+            background-color: var(--accent-blue);
+            padding: 10px;
+            font-size: 0.85rem;
+        }
+
+        .btn-resolve {
+            background-color: var(--primary);
+            font-size: 0.85rem;
+            padding: 8px 12px;
+            margin-top: 8px;
+        }
+
+        /* VISTA DO GESTOR */
+        .report-card {
+            background: white;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 14px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .report-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 700;
+            background-color: #ffe0b2;
+            color: var(--accent-orange);
+        }
+
+        .badge.resolvido {
+            background-color: #c8e6c9;
+            color: var(--primary-dark);
+        }
+
+        .report-info {
+            font-size: 0.82rem;
+            margin-bottom: 4px;
+        }
+
+        .report-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin: 8px 0;
+        }
+
+        .map-btn {
+            display: inline-block;
+            color: var(--accent-blue);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <h1>🌱 EcoDenúncia</h1>
+        </div>
+        <button class="nav-btn" id="toggleViewBtn" onclick="toggleView()">Área do Gestor</button>
+    </header>
+
+    <div class="container">
+
+        <!-- VISTA DO CIDADÃO (APP MÓVEL) -->
+        <div id="citizenView" class="view active">
+            <div class="card">
+                <h2 class="card-title">Registar Ocorrência</h2>
+                <p class="card-subtitle">Reporte problemas ambientais no distrito de forma simples.</p>
+
+                <form id="denunciaForm">
+                    
+                    <div class="form-group">
+                        <label for="tipo">Tipo de Problema</label>
+                        <select id="tipo" required>
+                            <option value="">Selecione...</option>
+                            <option value="Lixo Acumulado">Lixo Acumulado / RSU</option>
+                            <option value="Abate de Árvores">Abate / Corte de Árvores</option>
+                            <option value="Erosão do Solo">Erosão / Voçoroca</option>
+                            <option value="Outro">Outro Problema Ambiental</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tirar Foto da Ocorrência</label>
+                        <div class="photo-area" onclick="document.getElementById('foto').click()">
+                            <span class="photo-icon">📸</span>
+                            <span class="photo-text">Abrir Câmara ou Selecionar Foto</span>
+                            <!-- 'capture="environment"' abre diretamente a câmara traseira do telemóvel -->
+                            <input type="file" id="foto" accept="image/*" capture="environment" style="display:none" onchange="previewImage(event)" required>
+                        </div>
+                        <img id="imgPreview" class="photo-preview" alt="Pré-visualização">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Localização (GPS)</label>
+                        <div class="gps-group">
+                            <input type="text" id="coords" placeholder="Coordenadas GPS não obtidas" readonly required>
+                            <button type="button" class="btn btn-blue" onclick="getGPS()">📍 Obter Localização Atual</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pontoReferencia">Ponto de Referência / Bairro</label>
+                        <input type="text" id="pontoReferencia" placeholder="Ex: Atrás da Escola Primária, Bairro 3" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descricao">Descrição Breve</label>
+                        <textarea id="descricao" placeholder="Descreva o que está a acontecer no local..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn">Enviar Denúncia</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- VISTA DO GESTOR (PAINEL ADMIN) -->
+        <div id="managerView" class="view">
+            <div class="card">
+                <h2 class="card-title">Painel de Gestão</h2>
+                <p class="card-subtitle">Ocorrências submetidas pelos cidadãos.</p>
+                
+                <div id="listaDenuncias"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let denuncias = [
+            {
+                id: 1,
+                tipo: "Lixo Acumulado",
+                foto: "https://images.unsplash.com/photo-1530587191325-3db32d826c18?w=500&auto=format&fit=crop",
+                coords: "-25.9692, 32.5732",
+                pontoReferencia: "Mercado Central",
+                descricao: "Acúmulo de resíduos sólidos sem recolha.",
+                status: "Pendente",
+                data: "2026-10-08"
+            }
+        ];
+
+        function toggleView() {
+            const citizenView = document.getElementById('citizenView');
+            const managerView = document.getElementById('managerView');
+            const toggleBtn = document.getElementById('toggleViewBtn');
+
+            if (citizenView.classList.contains('active')) {
+                citizenView.classList.remove('active');
+                managerView.classList.add('active');
+                toggleBtn.innerText = "Modo Cidadão";
+                renderDenuncias();
+            } else {
+                managerView.classList.remove('active');
+                citizenView.classList.add('active');
+                toggleBtn.innerText = "Área do Gestor";
+            }
+        }
+
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('imgPreview');
+                output.src = reader.result;
+                output.style.display = 'block';
+            }
+            if(event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
+
+        function getGPS() {
+            const coordsInput = document.getElementById('coords');
+            if (navigator.geolocation) {
+                coordsInput.placeholder = "A obter sinal GPS...";
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude.toFixed(5);
+                        const lng = position.coords.longitude.toFixed(5);
+                        coordsInput.value = `${lat}, ${lng}`;
+                    },
+                    (error) => {
+                        alert("Por favor, ative a localização (GPS) nas definições do seu telemóvel.");
+                        coordsInput.placeholder = "Sem sinal GPS";
+                    }
+                );
+            } else {
+                alert("Geolocalização não suportada no seu navegador.");
+            }
+        }
+
+        document.getElementById('denunciaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const fotoInput = document.getElementById('foto');
+            const file = fotoInput.files[0];
+
+            if(!file) {
+                alert("Por favor, tire uma fotografia do local.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const novaDenuncia = {
+                    id: Date.now(),
+                    tipo: document.getElementById('tipo').value,
+                    foto: event.target.result,
+                    coords: document.getElementById('coords').value,
+                    pontoReferencia: document.getElementById('pontoReferencia').value,
+                    descricao: document.getElementById('descricao').value,
+                    status: "Pendente",
+                    data: new Date().toISOString().split('T')[0]
+                };
+
+                denuncias.unshift(novaDenuncia);
+                alert("Denúncia enviada com sucesso aos gestores!");
+                
+                document.getElementById('denunciaForm').reset();
+                document.getElementById('imgPreview').style.display = 'none';
+            };
+
+            reader.readAsDataURL(file);
+        });
+
+        function renderDenuncias() {
+            const container = document.getElementById('listaDenuncias');
+            container.innerHTML = '';
+
+            if (denuncias.length === 0) {
+                container.innerHTML = '<p style="font-size:0.85rem; color:#666;">Nenhuma denúncia registada.</p>';
+                return;
+            }
+
+            denuncias.forEach(item => {
+                const mapsUrl = `https://www.google.com/maps?q=${item.coords}`;
+                const isResolvido = item.status === 'Resolvido';
+                
+                const card = document.createElement('div');
+                card.className = 'report-card';
+                card.innerHTML = `
+                    <div class="report-header">
+                        <span class="report-title">${item.tipo}</span>
+                        <span class="badge ${isResolvido ? 'resolvido' : ''}">${item.status}</span>
+                    </div>
+                    <div class="report-info"><strong>Data:</strong> ${item.data}</div>
+                    <div class="report-info"><strong>Local:</strong> ${item.pontoReferencia}</div>
+                    <div class="report-info"><strong>Descrição:</strong> ${item.descricao}</div>
+                    <a href="${mapsUrl}" target="_blank" class="map-btn">📍 Abrir no Google Maps (${item.coords})</a>
+                    <img src="${item.foto}" class="report-img" alt="Foto da ocorrência">
+                    ${!isResolvido ? `<button class="btn btn-resolve" onclick="marcarResolvido(${item.id})">Marcar como Resolvido</button>` : ''}
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function marcarResolvido(id) {
+            const item = denuncias.find(d => d.id === id);
+            if(item) {
+                item.status = "Resolvido";
+                renderDenuncias();
+            }
+        }
+    </script>
+</body>
+</html>
+
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EcoDenúncia - Gestão Ambiental Distrital</title>
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #1b5e20;
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-sub: #7f8c8d;
+            --border-color: #dcdde1;
+            --accent-blue: #0288d1;
+            --accent-orange: #e65100;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 30px;
+        }
+
+        /* HEADER */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .brand h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .nav-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* CONTAINER */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            color: var(--primary-dark);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .card-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            margin-bottom: 16px;
+        }
+
+        /* FORMULÁRIO */
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background-color: #fafafa;
+            outline: none;
+        }
+
+        textarea {
+            resize: none;
+            height: 80px;
+        }
+
+        /* FOTO COM CÂMARA */
+        .photo-area {
+            border: 2px dashed var(--border-color);
+            background-color: #fafafa;
+            border-radius: 8px;
+            padding: 18px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .photo-icon {
+            font-
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Snake</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <script src="render.js"></script><!-- defines canvas, ctx, draw() -->
+  <script src="input.js"></script><!-- attaches keyboard + touch listeners -->
+  <script src="game.js"></script> <!-- state, loop, boot -->
+
+</body>
+</html>
